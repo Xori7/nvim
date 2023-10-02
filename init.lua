@@ -21,5 +21,22 @@ require("lazy").setup({
 			}) 
 			vim.cmd("colorscheme catppuccin-mocha")
 		end
-	}
+	},
+	{
+		"nvim-treesitter/nvim-treesitter",
+		name = "treesitter",
+		config = function() 
+			require("nvim-treesitter.configs").setup({
+				autoinstall = true,
+				highlight = {
+					enable = true,
+				}
+			})
+		end
+        },
 })
+
+
+-------------------------Useful Options-----------------------------
+vim.opt.nu = true
+vim.opt.relativenumber = true
