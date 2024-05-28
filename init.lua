@@ -34,39 +34,65 @@ vim.keymap.set("n", "<leader>P", [["+P]])
 vim.keymap.set({ "n", "v" }, "<leader>d", [["+d]])
 vim.keymap.set("n", "<leader>D", [["+D]])
 
-require("lazy").setup({
-    {'VonHeikemen/lsp-zero.nvim', branch = 'v3.x', config = function()
-        require("lsp-zero").setup({})
-        require("lspconfig").zls.setup({})
+    require("lazy").setup({
+    {'VonHeikemen/lsp-zero.nvim', 
+    branch = 'v3.x', 
+        config = function()
+            local lsp_zero = require("lsp-zero")
+            lsp_zero.extend_lspconfig()
+            local lsp = lsp_zero.preset({})
+            local lspconfig = require("lspconfig")
+
+            --lspconfig.clangd.setup({})
+            lspconfig.rust_analyzer.setup({})
+            lspconfig.zls.setup({})
+
+            lsp.setup()
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+                callback = function(ev)
+                    local opts = { buffer = ev.buf }
+                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+                    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+                    vim.keymap.set("n", "gh", vim.diagnostic.open_float, opts)
+                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                    vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
+                    vim.keymap.set({ "n", "v" }, "<leader><CR>", vim.lsp.buf.code_action, opts)
+                    vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, opts)
+                end,
+            })
         end
     },
     {'neovim/nvim-lspconfig'},
     {'hrsh7th/cmp-nvim-lsp'},
     {'hrsh7th/nvim-cmp'},
     {'L3MON4D3/LuaSnip'},
-	{
-	    "catppuccin/nvim",
-	    name = "catppuccin",
-	    config = function() 
-		    require("catppuccin").setup({
-			    no_italic = true
-		    }) 
-		    vim.cmd("colorscheme catppuccin-mocha")
-		end
-	},
-	{
-		"nvim-treesitter/nvim-treesitter",
-		name = "treesitter",
-		config = function() 
-			require("nvim-treesitter.configs").setup({
-				autoinstall = true,
-				highlight = {
-					enable = true,
-				}
-			})
-		end
+    {
+        "catppuccin/nvim",
+        name = "catppuccin",
+        config = function() 
+    	    require("catppuccin").setup({
+    		    no_italic = true
+    	    }) 
+    	    vim.cmd("colorscheme catppuccin-mocha")
+    	end
+    },
+    {
+    	"nvim-treesitter/nvim-treesitter",
+    	name = "treesitter",
+    	config = function() 
+    		require("nvim-treesitter.configs").setup({
+    			autoinstall = true,
+    			highlight = {
+    				enable = true,
+    			}
+    		})
+    	end
         },
-})
+  })
 
 --local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 --if not vim.uv.fs_stat(lazypath) then
