@@ -23,6 +23,8 @@ vim.opt.relativenumber = true
 
 vim.opt.smartindent = true
 
+vim.cmd("let c_syntax_for_h = 1")
+
 vim.g.mapleader = " "
 
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
@@ -43,7 +45,7 @@ vim.keymap.set("n", "<leader>D", [["+D]])
             local lsp = lsp_zero.preset({})
             local lspconfig = require("lspconfig")
 
-            --lspconfig.clangd.setup({})
+            lspconfig.clangd.setup({})
             lspconfig.rust_analyzer.setup({})
             lspconfig.zls.setup({})
 
@@ -91,48 +93,15 @@ vim.keymap.set("n", "<leader>D", [["+D]])
     			}
     		})
     	end
-        },
+    },
+    {
+        'stevearc/oil.nvim',
+        opts = {},
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+    {
+        'nvim-telescope/telescope.nvim', tag = '0.1.6',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    }
   })
 
---local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
---if not vim.uv.fs_stat(lazypath) then
---    vim.fn.system({
---	"git",
---	"clone",
---	"--filter=blob:none",
---	"https://github.com/folke/lazy.nvim.git",
---	"--branch=stable", -- latest stable release
---	lazypath,
---    })
---end
---vim.opt.rtp:prepend(lazypath)
---
---require("lazy").setup({
---	{
---		"catppuccin/nvim",
---		name = "catppuccin",
---		config = function() 
---			require("catppuccin").setup({
---				no_italic = true
---			}) 
---			vim.cmd("colorscheme catppuccin-mocha")
---		end
---	},
---	{
---		"nvim-treesitter/nvim-treesitter",
---		name = "treesitter",
---		config = function() 
---			require("nvim-treesitter.configs").setup({
---				autoinstall = true,
---				highlight = {
---					enable = true,
---				}
---			})
---		end
---        },
---})
---
---
----------------------------Useful Options-----------------------------
---vim.opt.nu = true
---vim.opt.relativenumber = true
