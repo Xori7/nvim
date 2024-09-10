@@ -71,7 +71,12 @@ vim.keymap.set("n", "<leader>F", "Telescope find_files")
             })
         end
     },
-    {'neovim/nvim-lspconfig'},
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            { "j-hui/fidget.nvim", opts = {} },
+        },
+    },
     {'hrsh7th/cmp-nvim-lsp'},
     {'hrsh7th/nvim-cmp'},
     {'L3MON4D3/LuaSnip'},
