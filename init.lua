@@ -38,6 +38,8 @@ vim.keymap.set("n", "<leader>D", [["+D]])
 
 vim.keymap.set("n", "<leader>F", "Telescope find_files")
 
+vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
+
 
     require("lazy").setup({
     {'VonHeikemen/lsp-zero.nvim', 
