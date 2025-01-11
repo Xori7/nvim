@@ -51,6 +51,7 @@ vim.keymap.set("n", "<leader>F", "Telescope find_files")
             lspconfig.clangd.setup({})
             lspconfig.rust_analyzer.setup({})
             lspconfig.zls.setup({})
+            lspconfig.pylsp.setup({})
 
             lsp.setup()
             vim.api.nvim_create_autocmd("LspAttach", {
