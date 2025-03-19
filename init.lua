@@ -50,7 +50,21 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
             local lsp = lsp_zero.preset({})
             local lspconfig = require("lspconfig")
 
-            lspconfig.clangd.setup({})
+            lspconfig.clangd.setup({
+                cmd = {
+                     "clangd",
+                     "--background-index",
+                     "-j=12",
+                     "--clang-tidy",
+                     "--clang-tidy-checks=*",
+                     "--all-scopes-completion",
+                     "--cross-file-rename",
+                     "--completion-style=detailed",
+                     "--header-insertion-decorators",
+                     "--header-insertion=iwyu",
+                     "--pch-storage=memory",
+                }
+            })
             lspconfig.rust_analyzer.setup({})
             lspconfig.zls.setup({})
             lspconfig.pylsp.setup({})
