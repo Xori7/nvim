@@ -24,8 +24,11 @@ vim.opt.relativenumber = true
 vim.opt.smartindent = true
 
 vim.cmd("let c_syntax_for_h = 1")
+--vim.cmd("filetype plugin on")
 
 vim.g.mapleader = " "
+
+vim.keymap.set({ "n" }, "-", ":Oil<CR>")
 
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
@@ -56,7 +59,7 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
                      "--background-index",
                      "-j=12",
                      "--clang-tidy",
-                     "--clang-tidy-checks=*",
+                     --"--clang-tidy-checks=*",
                      "--all-scopes-completion",
                      "--cross-file-rename",
                      "--completion-style=detailed",
