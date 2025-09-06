@@ -1,0 +1,4 @@
+BasedOnStyle: LLVM   # or Google, Chromium, etc. – pick your base style
+IndentWidth: 8       # number of spaces for indentation
+UseTab: Never        # force spaces instead of tabs
+TabWidth: 8          # tab width if tabs are displayed (doesn’t matter if UseTab=Never)

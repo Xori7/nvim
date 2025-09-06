@@ -124,6 +124,7 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
     },
     {
         'stevearc/oil.nvim',
+        view_options = { show_hidden = true },
         opts = {},
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
