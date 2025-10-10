@@ -52,6 +52,13 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
             lsp_zero.extend_lspconfig()
             local lsp = lsp_zero.preset({})
             local lspconfig = require("lspconfig")
+          vim.diagnostic.config({
+            virtual_text = true, -- Show inline text for diagnostics
+            signs = true,        -- Show signs in the gutter
+            update_in_insert = false, -- Prevent diagnostics from updating in insert mode
+            underline = true,     -- Underline issues
+            severity_sort = true, -- Sort by severity
+          })
 
             lspconfig.clangd.setup({
                 cmd = {
@@ -59,7 +66,7 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
                      "--background-index",
                      "-j=12",
                      "--clang-tidy",
-                     --"--clang-tidy-checks=*",
+                     "--clang-tidy-checks=*",
                      "--all-scopes-completion",
                      "--cross-file-rename",
                      "--completion-style=detailed",
