@@ -45,65 +45,76 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
 
 
     require("lazy").setup({
-    {'VonHeikemen/lsp-zero.nvim', 
-    branch = 'v3.x', 
-        config = function()
-            local lsp_zero = require("lsp-zero")
-            lsp_zero.extend_lspconfig()
-            local lsp = lsp_zero.preset({})
-            local lspconfig = require("lspconfig")
-          vim.diagnostic.config({
-            virtual_text = true, -- Show inline text for diagnostics
-            signs = true,        -- Show signs in the gutter
-            update_in_insert = false, -- Prevent diagnostics from updating in insert mode
-            underline = true,     -- Underline issues
-            severity_sort = true, -- Sort by severity
-          })
+{
+    'neovim/nvim-lspconfig',
+    dependencies = {
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/nvim-cmp',
+        'L3MON4D3/LuaSnip',
+        { "j-hui/fidget.nvim", opts = {} },
+    },
+    config = function()
+        -- Global diagnostic settings
+        vim.diagnostic.config({
+            virtual_text = true,
+            signs = true,
+            update_in_insert = false,
+            underline = true,
+            severity_sort = true,
+        })
 
-            lspconfig.clangd.setup({
-                cmd = {
-                     "clangd",
-                     "--background-index",
-                     "-j=12",
-                     "--clang-tidy",
-                     "--clang-tidy-checks=*",
-                     "--all-scopes-completion",
-                     "--cross-file-rename",
-                     "--completion-style=detailed",
-                     "--header-insertion-decorators",
-                     "--header-insertion=iwyu",
-                     "--pch-storage=memory",
-                }
-            })
-            lspconfig.rust_analyzer.setup({})
-            lspconfig.zls.setup({})
-            lspconfig.pylsp.setup({})
+        -- CMP capabilities (shared for all servers)
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-            lsp.setup()
-            vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-                    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-                    vim.keymap.set("n", "gh", vim.diagnostic.open_float, opts)
-                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                    vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, opts)
-                    vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
-                    vim.keymap.set({ "n", "v" }, "<leader><CR>", vim.lsp.buf.code_action, opts)
-                    vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, opts)
-                end,
-            })
+        -- Custom config for clangd (your special cmd flags)
+        vim.lsp.config['clangd'] = {
+            cmd = {
+                "clangd",
+                "--background-index",
+                "-j=12",
+                "--clang-tidy",
+                "--clang-tidy-checks=*",
+                "--all-scopes-completion",
+                "--cross-file-rename",
+                "--completion-style=detailed",
+                "--header-insertion-decorators",
+                "--header-insertion=iwyu",
+                "--pch-storage=memory",
+            },
+            capabilities = capabilities,
+        }
+
+        -- Default configs for the others (nvim-lspconfig provides the defaults automatically)
+        -- Just enable them with capabilities
+        local default_servers = { 'rust_analyzer', 'zls', 'pylsp' }
+        for _, server in ipairs(default_servers) do
+            vim.lsp.config[server] = {
+                capabilities = capabilities,
+            }
         end
-    },
-    {
-        'neovim/nvim-lspconfig',
-        dependencies = {
-            { "j-hui/fidget.nvim", opts = {} },
-        },
-    },
+
+        -- Enable all servers (they auto-attach on matching filetypes)
+        vim.lsp.enable({ 'clangd', 'rust_analyzer', 'zls', 'pylsp' })
+
+        -- Keymaps on LSP attach
+        vim.api.nvim_create_autocmd("LspAttach", {
+            group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
+            callback = function(ev)
+                local opts = { buffer = ev.buf }
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+                vim.keymap.set("n", "gh", vim.diagnostic.open_float, opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, opts)
+                vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
+                vim.keymap.set({ "n", "v" }, "<leader><CR>", vim.lsp.buf.code_action, opts)
+                vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, opts)
+            end,
+        })
+    end
+},
     {'hrsh7th/cmp-nvim-lsp'},
     {'hrsh7th/nvim-cmp'},
     {'L3MON4D3/LuaSnip'},
