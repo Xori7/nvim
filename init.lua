@@ -132,12 +132,6 @@ vim.keymap.set('t', '<Leader><ESC>', '<C-\\><C-n>', {noremap = true})
     	"nvim-treesitter/nvim-treesitter",
     	name = "treesitter",
     	config = function() 
-    		require("nvim-treesitter.configs").setup({
-    			autoinstall = true,
-    			highlight = {
-    				enable = true,
-    			}
-    		})
     	end
     },
     {
